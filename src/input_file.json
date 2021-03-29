@@ -1,0 +1,2 @@
+{"id":11111,"name":"carrot","coordinates":{"x":1.0,"y":2.0},"creationDate":"Mar 27, 2020 12:00:00 AM","price":150,"partNumber":"1","manufactureCost":12.0,"unitOfMeasure":"GRAMS","owner":{"name":"John","birthday":"Sep 22, 1932 12:00:00 AM","height":100.0,"weight":75,"passportID":"123456"},
+"id":22222,"name":"cabbage","coordinates":{"x":12.0,"y":20.0},"creationDate":"Mar 27, 2019 12:00:00 AM","price":100,"partNumber":"2","manufactureCost":10.0,"unitOfMeasure":"GRAMS","owner":{"name":"Oleg","birthday":"Dec 11, 2010 12:00:00 AM","height":110.0,"weight":12,"passportID":"567889"}}
