@@ -1,5 +1,6 @@
 package commands;
 
+import collection.Product;
 import utill.CollectionManager;
 import utill.Parser;
 import java.util.*;
@@ -10,7 +11,7 @@ import java.util.*;
 public class CommandManager {
     public Receiver receiver;
     private Scanner consoleScanner;
-    private HashMap<String, Command> commandMap = new HashMap<>();
+    private static HashMap<String, Command> commandMap = new HashMap<>();
     private CollectionManager collectionManager;
 
     /**
@@ -60,7 +61,7 @@ public class CommandManager {
      * Метод, добавляющицй все команды в хэщ-таблицу
      * @param commands команды
      */
-    private void addCommands(Command... commands) {
+    private void addCommands(Command ... commands) {
         for (Command command : commands) {
             commandMap.put(command.getKey(), command);
             command.setCommandManager(this);
@@ -71,6 +72,10 @@ public class CommandManager {
         return commandMap.values();
     }
 
+    public static ArrayList<String> getArrayOfCommands() {
+        return new ArrayList<String>(commandMap.keySet());
+    }
+
     /**
      * Класс Receiver(получатель). Здесь описана логика выполняемых команд
      */
@@ -79,9 +84,18 @@ public class CommandManager {
         public void help() {
             System.out.println("Доступные команды:");
             getAllCommands().stream().map(command -> command.getKey() + command.getHelpText()).forEach(System.out::println);
+            System.out.println();
+            System.out.println(getArrayOfCommands());
         }
 
         public void info() {
+            for (Map.Entry<Integer, Product> e : collectionManager.getCollection().entrySet()) {
+                if (e.getValue().equals(null)) {
+                    System.out.println("Ошибка");
+                    System.exit(1);
+                }
+            }
+
             System.out.println("Тип коллекции: " + collectionManager.getCollectionType());
             System.out.println("Дата инициализации: " + collectionManager.getInitDate());
             System.out.println("Количество элементов: " + collectionManager.getNumberOfElements());
@@ -112,7 +126,8 @@ public class CommandManager {
         }
 
         public void executeScript(String filename) {
-            collectionManager.executeScript(Parser.readScript(filename));
+            collectionManager.executeScript(Parser.readScript(filename), Parser.returnScriptPaths(filename));
+            Parser.listOfPaths.clear();
         }
 
         public void exit() {

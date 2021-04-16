@@ -10,7 +10,8 @@ public class App {
     Scanner consoleScanner;
     static CommandManager commandManager;
     CollectionManager collectionManager;
-    public static final String path = "./src/input_file.json";
+    public static String path = "";
+
 
     /**
      * Конструктор
@@ -22,6 +23,10 @@ public class App {
     }
 
     public static void main(String[] args) {
+        path = "./src/input_file.json";
+        if (System.getenv("tselikov") != null) {
+            path = System.getenv("tselikov");
+        }
         App app = new App();
         app.start();
     }
@@ -33,8 +38,17 @@ public class App {
         collectionManager.lineToCollection(path);
         System.out.println("Начало работы программы:");
         while (true) {
-            String[] input = consoleScanner.nextLine().trim().split(" ");
-            Parser.parseThenRun(input, commandManager);
+            try {
+                System.out.print("> ");
+                String input = consoleScanner.nextLine().trim();
+                if (input.isEmpty()) {
+                    continue;
+                }
+                Parser.parseThenRun(input.split(" "), commandManager);
+            } catch (NoSuchElementException e) {
+                System.out.println("не душите пожалувста");
+                System.exit(1);
+            }
         }
     }
 

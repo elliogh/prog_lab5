@@ -70,7 +70,7 @@ public class Person {
                 "          День рождения: " + birthday + "\n" +
                 "          Рост: " + height + "\n" +
                 "          Вес: " + weight + "\n" +
-                "          Номер паспорта: " + passportID + "\n";
+                "          Номер паспорта: " + passportID;
     }
 
     @Override

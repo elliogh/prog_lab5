@@ -143,7 +143,7 @@ public class Product {
                 "Номер части: " + partNumber + "\n" +
                 "Стоимость производства: " + manufactureCost + "\n" +
                 "Единица измерения: " + nameOfUnitOFMeasure + "\n" +
-                "Владелец: " + "\n" + owner + "\n";
+                "Владелец: " + "\n" + owner;
     }
 
     @Override

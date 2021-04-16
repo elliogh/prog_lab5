@@ -1,7 +1,7 @@
 package utill;
 
+import com.sun.istack.internal.NotNull;
 import commands.CommandManager;
-import main.App;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,6 +13,8 @@ import java.util.Scanner;
  * Класс Парсер(Parser). Делает парсинг команд
  */
 public class Parser {
+
+    public static ArrayList<String> listOfPaths = new ArrayList<>();
     /**
      * Метод для парсинга и запуска команды
      * @param input аргументы команды
@@ -41,5 +43,10 @@ public class Parser {
             System.out.println("Файл не найден");
         }
         return listOfCommands;
+    }
+
+    public static ArrayList<String> returnScriptPaths(String path) {
+        listOfPaths.add(path);
+        return listOfPaths;
     }
 }

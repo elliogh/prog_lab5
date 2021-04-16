@@ -3,6 +3,7 @@ package utill;
 import collection.Product;
 import com.google.gson.Gson;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -28,24 +29,33 @@ public class JsonWriter {
         for (Map.Entry<Integer, Product> e : collection.entrySet()) {
             list.add(gson.toJson(e.getValue()));
         }
-
-        for (int i = 0; i < list.get(0).length() - 1; i++) {
-            text.append(list.get(0).charAt(i));
-        }
-        text.append(",\n");
-        for (int i = 1; i < list.size() - 1; i++) {
-            for (int j = 1; j < list.get(i).length() - 1; j++) {
-                text.append(list.get(i).charAt(j));
+        if (list.size() > 0) {
+            for (int i = 0; i < list.get(0).length() - 1; i++) {
+                text.append(list.get(0).charAt(i));
             }
             text.append(",\n");
+
+            for (int i = 1; i < list.size() - 1; i++) {
+                for (int j = 1; j < list.get(i).length() - 1; j++) {
+                    text.append(list.get(i).charAt(j));
+                }
+                text.append(",\n");
+            }
+            if (collection.size() != 1) {
+                for (int i = 1; i < list.get(list.size() - 1).length(); i++) {
+                    text.append(list.get(list.size() - 1).charAt(i));
+                }
+            }
         }
-        for (int i = 1; i < list.get(list.size() - 1).length(); i++) {
-            text.append(list.get(list.size() - 1).charAt(i));
-        }
+        else System.out.println("Коллекция пуста");
 
         String str = String.valueOf(text);
         byte [] buffer = str.getBytes();
         try {
+            File file = new File(path);
+            file.delete();
+            File f = new File(path);
+            f.createNewFile();
             FileOutputStream fos = new FileOutputStream(path);
             fos.write(buffer, 0, buffer.length);
         } catch (FileNotFoundException e) {

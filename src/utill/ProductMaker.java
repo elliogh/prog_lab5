@@ -2,6 +2,8 @@ package utill;
 
 import collection.*;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
@@ -37,20 +39,33 @@ public class ProductMaker {
      * @param listOfPassportIDs
      * @return product
      */
-    public Product insertProduct(boolean passportCheck ,ArrayList<String> listOfPassportIDs) {
+    public Product insertProduct(boolean passportCheck ,ArrayList<String> listOfPassportIDs, String path) {
         Scanner scanner = new Scanner(System.in);
+        if (path != null) {
+            try {
+                scanner = new Scanner(new File(path));
+                while (true) {
+                    if (scanner.hasNextLine()) {
+                        if (scanner.nextLine().trim().split(" ")[0].equals("insert")) {
+                            break;
+                        }
+                    }
+                }
+            } catch (FileNotFoundException e) {
+                System.out.println("Файл не найден");
+            }
+        }
         String line = "";
         Product product = new Product(0, null, null, null, 0,  null, null, null, null);
 
         while (true) {
             System.out.println("Введите значение поля name ");
-            if (scanner.hasNextLine()) {
-                line = scanner.nextLine().trim();
-            }
+                if (scanner.hasNextLine()) {
+                    line = scanner.nextLine().trim();
+                }
             if (line.equals(null) || line.equals("")) {
                 System.out.println("Ошибка ввода");
-            }
-            else {
+            } else {
                 product.setName(line);
                 break;
             }
@@ -65,7 +80,7 @@ public class ProductMaker {
                 if (scanner.hasNextLine()) {
                     line = scanner.nextLine().trim();
                 }
-                coordinates.setX(Double.valueOf(line));
+                coordinates.setX(Double.parseDouble(line));
                 break;
             } catch (Exception e) {
                 System.out.println("Ошибка ввода");
@@ -78,7 +93,7 @@ public class ProductMaker {
                 if (scanner.hasNextLine()) {
                     line = scanner.nextLine().trim();
                 }
-                if (Float.valueOf(line) <= 834) {
+                if (Float.parseFloat(line) <= 834) {
                     coordinates.setY(Float.valueOf(line));
                     break;
                 } else throw new Exception("Wrong input");
@@ -96,8 +111,8 @@ public class ProductMaker {
                 if (scanner.hasNextLine()) {
                     line = scanner.nextLine().trim();
                 }
-                if (Integer.valueOf(line) > 0) {
-                    product.setPrice(Integer.valueOf(line));
+                if (Integer.parseInt(line) > 0) {
+                    product.setPrice(Integer.parseInt(line));
                     break;
                 } else throw new Exception("Wrong input");
             } catch (Exception e) {
@@ -165,11 +180,13 @@ public class ProductMaker {
             }
         }
 
-        Person owner = insertOwner(passportCheck,listOfPassportIDs);
+        Person owner = insertOwner(passportCheck, listOfPassportIDs, scanner);
         product.setOwner(owner);
 
         return product;
     }
+
+
 
     /**
      * Метод, создающий экземпляр класса Person из командной строки
@@ -177,8 +194,7 @@ public class ProductMaker {
      * @param listOfPassportIDs
      * @return owner
      */
-    public Person insertOwner(boolean passportCheck,ArrayList<String> listOfPassportIDs) {
-        Scanner scanner = new Scanner(System.in);
+    public Person insertOwner(boolean passportCheck,ArrayList<String> listOfPassportIDs, Scanner scanner) {
         String line = "";
         Person owner = new Person(null, null, null, 0, null);
         System.out.println("Введем владельца");
@@ -203,48 +219,32 @@ public class ProductMaker {
 
         while (true) {
             try {
-                System.out.println("Введите значение даты ");
+                System.out.println("Введите дату в формате DD.MM.YYYY");
                 if (scanner.hasNextLine()) {
                     line = scanner.nextLine().trim();
                 }
-                if (Integer.parseInt(line) > 0 && Integer.parseInt(line) < 32) {
-                    date = Integer.parseInt(line);
+                if (line.length() == 10 && line.matches("\\d{2}[.]\\d{2}[.]\\d{4}") ) {
+                    String [] str = line.split("\\.");
+
+                    if (Integer.parseInt(str[0]) > 0 && Integer.parseInt(str[0]) < 32) {
+                        date = Integer.parseInt(str[0]);
+                    }
+
+                    if (Integer.parseInt(str[1]) > 0 && Integer.parseInt(str[1]) < 13) {
+                        month = Integer.parseInt(str[1]) - 1;
+                    }
+
+                    if (Integer.parseInt(str[2]) > 0) {
+                        year = Integer.parseInt(str[2]) - 1900;
+                    }
                     break;
-                } else throw new Exception("Wrong input");
+                }
+                else System.out.println("Дата введена неверно");
             } catch (Exception e) {
                 System.out.println("Ошибка ввода");
             }
         }
 
-        while (true) {
-            try {
-                System.out.println("Введите значение месяца ");
-                if (scanner.hasNextLine()) {
-                    line = scanner.nextLine().trim();
-                }
-                if (Integer.parseInt(line) > 0) {
-                    month = (Integer.parseInt(line) - 1) % 12;
-                    break;
-                } else throw new Exception("Wrong input");
-            } catch (Exception e) {
-                System.out.println("Ошибка ввода");
-            }
-        }
-
-        while (true) {
-            try {
-                System.out.println("Введите значение года ");
-                if (scanner.hasNextLine()) {
-                    line = scanner.nextLine().trim();
-                }
-                if (Integer.parseInt(line) >= 0) {
-                    year = Integer.parseInt(line) - 1900;
-                    break;
-                } else throw new Exception("Wrong input");
-            } catch (Exception e) {
-                System.out.println("Ошибка ввода");
-            }
-        }
         Date birthday = new Date(year, month, date);
         owner.setBirthday(birthday);
 
@@ -258,7 +258,7 @@ public class ProductMaker {
                     owner.setHeight(null);
                     break;
                 }
-                if (Float.valueOf(line) > 0) {
+                if (Float.parseFloat(line) > 0) {
                     owner.setHeight(Float.valueOf(line));
                     break;
                 } else throw new Exception("Wrong input");
@@ -273,8 +273,8 @@ public class ProductMaker {
                 if (scanner.hasNextLine()) {
                     line = scanner.nextLine().trim();
                 }
-                if (Long.valueOf(line) > 0) {
-                    owner.setWeight(Long.valueOf(line));
+                if (Long.parseLong(line) > 0) {
+                    owner.setWeight(Long.parseLong(line));
                     break;
                 } else throw new Exception("Wrong input");
             } catch (Exception e) {

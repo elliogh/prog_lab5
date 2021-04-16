@@ -10,7 +10,11 @@ public class ExecuteScriptCommand extends Command{
 
     @Override
     public void execute(String[] args) {
-        String filename = args[0];
-        commandManager.receiver.executeScript(filename);
+        try {
+            String filename = args[0];
+            commandManager.receiver.executeScript(filename);
+        } catch (Exception e) {
+            System.out.println("Не было введено название файла");
+        }
     }
 }
